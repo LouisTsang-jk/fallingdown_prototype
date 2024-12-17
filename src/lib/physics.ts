@@ -1,5 +1,5 @@
 import Matter from 'matter-js';
-import { WINDOW_WIDTH, OBSTACLE_COUNT } from './constants';
+import { WINDOW_WIDTH, OBSTACLE_COUNT, MOVING_OBSTACLE_COUNT } from './constants';
 import { Ball } from '@/types';
 
 export function createPhysicsEngine() {
@@ -16,6 +16,8 @@ export function createPhysicsEngine() {
 
 export const generateObstacles = (mapLength: number) => {
   const obstacles = [];
+  
+  // 静态障碍物
   for (let i = 0; i < OBSTACLE_COUNT; i++) {
     const x = Math.random() * (WINDOW_WIDTH - 100) + 50;
     const y = (mapLength / OBSTACLE_COUNT) * i;
@@ -25,10 +27,37 @@ export const generateObstacles = (mapLength: number) => {
     const body = Matter.Bodies.rectangle(x, y, width, height, {
       isStatic: true,
       angle: (Math.random() - 0.5) * Math.PI / 4,
+      label: 'static-obstacle'
     });
 
-    obstacles.push({ body });
+    obstacles.push({ 
+      body,
+      isMoving: false 
+    });
   }
+
+  // 移动障碍物
+  for (let i = 0; i < MOVING_OBSTACLE_COUNT; i++) {
+    const x = Math.random() * (WINDOW_WIDTH - 100) + 50;
+    const y = (mapLength / MOVING_OBSTACLE_COUNT) * i + 200; // 错开一些距离
+    const width = 80;
+    const height = 20;
+
+    const body = Matter.Bodies.rectangle(x, y, width, height, {
+      isStatic: true,
+      angle: 0,
+      label: 'moving-obstacle'
+    });
+
+    obstacles.push({ 
+      body,
+      isMoving: true,
+      direction: 1, // 1 表示向右, -1 表示向左
+      startX: x,
+      range: 150 // 移动范围
+    });
+  }
+  
   return obstacles;
 };
 

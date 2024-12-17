@@ -5,7 +5,7 @@ import { GameControls } from './GameControls';
 import { GameRenderer } from './GameRenderer';
 import { WinnerDisplay } from './WinnerDisplay';
 import { createPhysicsEngine, generateObstacles, createBalls } from '@/lib/physics';
-import { WINDOW_WIDTH, WINDOW_HEIGHT, DEFAULT_MAP_LENGTH, DEFAULT_BALL_COUNT, DEFAULT_BALL_SIZE } from '@/lib/constants';
+import { WINDOW_WIDTH, WINDOW_HEIGHT, DEFAULT_MAP_LENGTH, DEFAULT_BALL_COUNT, DEFAULT_BALL_SIZE, MOVING_OBSTACLE_SPEED } from '@/lib/constants';
 import type { Ball, Obstacle } from '@/types';
 
 export function Game() {
@@ -121,6 +121,34 @@ export function Game() {
 
     return () => clearTimeout(timer);
   }, [gameStarted, currentBatchIndex, balls, engine.world]);
+
+  // 添加移动障碍物的动画
+  useEffect(() => {
+    if (!gameStarted) return;
+
+    const moveObstacles = () => {
+      obstacles.forEach(obstacle => {
+        if (obstacle.isMoving && obstacle.startX !== undefined && 
+            obstacle.range !== undefined && obstacle.direction !== undefined) {
+          const currentX = obstacle.body.position.x;
+          
+          if (currentX >= obstacle.startX + obstacle.range) {
+            obstacle.direction = -1;
+          } else if (currentX <= obstacle.startX - obstacle.range) {
+            obstacle.direction = 1;
+          }
+          
+          Matter.Body.setPosition(obstacle.body, {
+            x: currentX + (MOVING_OBSTACLE_SPEED * obstacle.direction),
+            y: obstacle.body.position.y
+          });
+        }
+      });
+    };
+
+    const interval = setInterval(moveObstacles, 16);
+    return () => clearInterval(interval);
+  }, [gameStarted, obstacles]);
 
   return (
     <div className="flex gap-4">

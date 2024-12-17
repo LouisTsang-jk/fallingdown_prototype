@@ -26,7 +26,7 @@ export function GameRenderer({
 
   const drawObstacle = (g: PIXI.Graphics, obstacle: Obstacle) => {
     const vertices = obstacle.body.vertices;
-    g.beginFill(0x00ff00);
+    g.beginFill(obstacle.isMoving ? 0xff6b6b : 0x00ff00);
     g.moveTo(vertices[0].x, vertices[0].y - cameraY);
     for (let i = 1; i < vertices.length; i++) {
       g.lineTo(vertices[i].x, vertices[i].y - cameraY);

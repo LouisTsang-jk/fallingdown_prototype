@@ -7,4 +7,8 @@ export interface Ball {
 
 export interface Obstacle {
   body: Matter.Body;
+  isMoving: boolean;
+  direction?: number;
+  startX?: number;
+  range?: number;
 }

@@ -4,3 +4,5 @@ export const OBSTACLE_COUNT = 30;
 export const DEFAULT_MAP_LENGTH = 5000;
 export const DEFAULT_BALL_COUNT = 3;
 export const DEFAULT_BALL_SIZE = 20;
+export const MOVING_OBSTACLE_COUNT = 10;
+export const MOVING_OBSTACLE_SPEED = 2;
