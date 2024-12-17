@@ -55,10 +55,10 @@ export function GameRenderer({
           text={ball.id.toString()}
           x={ball.body.position.x - 5}
           y={ball.body.position.y - cameraY - 7}
-          style={{
+          style={new PIXI.TextStyle({
             fontSize: 14,
             fill: 0xffffff,
-          }}
+          })}
         />
       ))}
     </Container>
